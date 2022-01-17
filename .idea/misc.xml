@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/drawable/background_bottom_sheet.xml" value="0.2265625" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/drawable/ic_baseline_api_24.xml" value="0.3828125" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/drawable/ic_baseline_fiber_manual_record_24.xml" value="0.3828125" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/drawable/ic_baseline_gps_fixed_24.xml" value="0.2796875" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/layout-land/fragment_record.xml" value="0.31040564373897706" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/layout/bottom_sheet_record_location.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/layout/fragment_record.xml" value="0.25" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/layout/fragment_record_list.xml" value="0.2671875" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/menu/menu_recording_fragment.xml" value="0.2947916666666667" />
+        <entry key="..\:/Users/sarlej/AndroidStudioProjects/Sytrack/app/src/main/res/xml/preferences.xml" value="0.33" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

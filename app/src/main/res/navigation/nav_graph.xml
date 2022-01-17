@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/recordFragment">
+
+    <action android:id="@+id/action_global_recording_fragment"
+        app:destination="@id/recordFragment"
+        app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/recordFragment"
+        android:name="com.sytrack.ui.fragments.RecordFragment"
+        android:label="RecordFragment" >
+        <action
+            android:id="@+id/action_recordFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recordListFragment"
+        android:name="com.sytrack.ui.fragments.RecordListFragment"
+        android:label="RecordListFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.sytrack.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
+</navigation>

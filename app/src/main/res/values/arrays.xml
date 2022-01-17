@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="record_line_colors" >
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Green</item>
+    </string-array>
+    <string-array name="record_line_colors_values" >
+        <item>#000000</item>
+        <item>#0000FF</item>
+        <item>#FF0000</item>
+        <item>#00FF00</item>
+    </string-array>
+    <string-array name="record_line_width_values" >
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="record_line_width" >
+        <item>Thin</item>
+        <item>Medium</item>
+        <item>Thick</item>
+    </string-array>
+</resources>

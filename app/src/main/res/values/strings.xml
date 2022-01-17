@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Sytrack</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic2FycGl1biIsImEiOiJjazY0em1mMGMweXhpM2tvNDI3N3hzb2V1In0.thHFQTs4iLSzYYY97h3oaw</string>
+    <string name="my_track">My track</string>
+    <string name="record_history">History</string>
+    <string name="accept_permission">Please accept all these required permission to start application</string>
+    <string name="record_track">Record track</string>
+    <string name="current_position_view">Current position view</string>
+    <string name="track_recording">Your track is recording</string>
+    <string name="recorded_location">Recorded location #%1$d</string>
+    <string name="no_track_saved">No track saved. Do not be lazy, start one!</string>
+
+    <string name="permission_dialog_title">One more permission needed</string>
+    <string name="permission_dialog_text">"To track your activity in background, please select \"Allow all the time\" on the following permission settings screen"</string>
+    <string name="settings">Settings</string>
+    <string name="line_color">Line color</string>
+    <string name="line_width">Line width</string>
+    <string name="updates_interval">Updates interval in seconds</string>
+    <string name="map_customisation">Map customisation</string>
+    <string name="waiting_for_position">Waiting for position</string>
+    <string name="line_color_key">KEY_LINE_COLOR</string>
+    <string name="updates_interval_key">KEY_UPDATE_INTERVAL</string>
+    <string name="line_width_key">KEY_LINE_WIDTH</string>
+</resources>

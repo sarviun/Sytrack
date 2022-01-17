@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:key="map_category"
+        app:title="@string/map_customisation">
+
+        <EditTextPreference
+            app:key="@string/updates_interval_key"
+            app:title="@string/updates_interval"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="4"
+            android:inputType="number"
+            />
+
+        <ListPreference
+            app:key="@string/line_color_key"
+            app:title="@string/line_color"
+            app:useSimpleSummaryProvider="true"
+            app:entryValues="@array/record_line_colors_values"
+            app:entries="@array/record_line_colors"
+            app:defaultValue="#FF0000"/>
+
+        <ListPreference
+            app:key="@string/line_width_key"
+            app:title="@string/line_width"
+            app:useSimpleSummaryProvider="true"
+            app:entryValues="@array/record_line_width_values"
+            app:entries="@array/record_line_width"
+            app:defaultValue="5"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

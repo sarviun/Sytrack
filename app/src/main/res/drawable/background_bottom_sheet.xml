@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="top">
+        <shape
+            android:shape="rectangle" >
+            <gradient
+                android:angle="90"
+                android:endColor="#00000000"
+                android:centerColor="#26000000"
+                android:startColor="#66000000" />
+            <size android:height="32dp" />
+            <corners android:topLeftRadius="18dp" android:topRightRadius="18dp" />
+
+        </shape>
+    </item>
+
+    <item android:top="4dp">
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@color/cardview_light_background"/>
+            <corners android:topLeftRadius="16dp" android:topRightRadius="16dp" />
+        </shape>
+    </item>
+
+
+
+</layer-list>

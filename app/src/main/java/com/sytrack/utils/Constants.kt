@@ -1,0 +1,24 @@
+package com.sytrack.utils
+
+object Constants {
+
+    const val DATABASE_NAME = "db"
+    const val ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE"
+    const val ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_SERVICE"
+    const val ACTION_SHOW_RECORDING_FRAGMENT = "ACTION_SHOW_RECORDING_FRAGMENT"
+    const val ACTION_UPDATE_INTERVAL = "ACTION_UPDATE_INTERVAL"
+    const val ACTION_START_SERVICE = "START_SERVICE"
+
+    const val NOTIFICATION_CHANNEL_ID = "recording_channel"
+    const val NOTIFICATION_CHANNEL_NAME = "Recording"
+    const val NOTIFICATION_ID = 1
+
+    const val INTERVAL_POSITION_UPDATE = 2000L
+    const val INTERVAL_POSITION_UPDATE_FASTEST = 2000L
+    const val INTERVAL_POSITION_MAX_WAIT = 4000L
+
+    const val MAPBOX_DEFAULT_ZOOM = 14.0
+    const val DEFAULT_LINE_COLOR = "#000000"
+    const val DEFAULT_LINE_WIDTH = "5.0"
+
+}
