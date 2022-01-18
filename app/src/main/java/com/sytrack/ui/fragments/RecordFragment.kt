@@ -34,7 +34,6 @@ import com.sytrack.ui.viewmodels.RecordViewModel
 import com.sytrack.utils.Constants.ACTION_START_FOREGROUND_SERVICE
 import com.sytrack.utils.Constants.ACTION_START_SERVICE
 import com.sytrack.utils.Constants.ACTION_STOP_FOREGROUND_SERVICE
-import com.sytrack.utils.Constants.ACTION_UPDATE_INTERVAL
 import com.sytrack.utils.Constants.DEFAULT_LINE_COLOR
 import com.sytrack.utils.Constants.DEFAULT_LINE_WIDTH
 import com.sytrack.utils.Constants.MAPBOX_DEFAULT_ZOOM
@@ -46,8 +45,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RecordFragment : Fragment(R.layout.fragment_record),
-    SharedPreferences.OnSharedPreferenceChangeListener {
+class RecordFragment : Fragment(R.layout.fragment_record) {
 
     private val viewModel: RecordViewModel by viewModels()
     private lateinit var binding: FragmentRecordBinding
@@ -470,10 +468,5 @@ class RecordFragment : Fragment(R.layout.fragment_record),
             return format.format(date)
         }
         return ""
-    }
-
-    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        if (p1.equals(getString(R.string.line_color_key)))
-            sendCommandToService(ACTION_UPDATE_INTERVAL)
     }
 }

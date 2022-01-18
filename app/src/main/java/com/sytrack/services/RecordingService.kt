@@ -8,11 +8,9 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -25,21 +23,18 @@ import com.sytrack.utils.Constants.ACTION_SHOW_RECORDING_FRAGMENT
 import com.sytrack.utils.Constants.ACTION_START_FOREGROUND_SERVICE
 import com.sytrack.utils.Constants.ACTION_STOP_FOREGROUND_SERVICE
 import com.sytrack.utils.Constants.ACTION_UPDATE_INTERVAL
-import com.sytrack.utils.Constants.INTERVAL_POSITION_MAX_WAIT
-import com.sytrack.utils.Constants.INTERVAL_POSITION_UPDATE
-import com.sytrack.utils.Constants.INTERVAL_POSITION_UPDATE_FASTEST
+import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_MAX_WAIT_MILLIS
+import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS
+import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_UPDATE_FASTEST_MILLIS
 import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_ID
 import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_NAME
 import com.sytrack.utils.Constants.NOTIFICATION_ID
+import com.sytrack.utils.Constants.UPDATE_INTERVAL_IN_MILLIS
 import com.sytrack.utils.PermissionUtility
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecordingService : LifecycleService() {
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
 
     companion object {
         val isRecordingOn = MutableLiveData<Boolean>()
@@ -83,21 +78,14 @@ class RecordingService : LifecycleService() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun updateLocationTracking() {
-
-        val savedIntervalValueInSeconds = try {
-            sharedPreferences.getString(getString(R.string.updates_interval_key), "")?.toLong()?.times(1000)
-                ?: INTERVAL_POSITION_UPDATE
-        } catch (ex: NumberFormatException) {
-            INTERVAL_POSITION_UPDATE
-        }
+    private fun updateLocationTracking(intervalInMillis: Long = DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS) {
 
         if (PermissionUtility.hasLocationPermission(this)) {
             val request = LocationRequest.create().apply {
-                interval = savedIntervalValueInSeconds
-                fastestInterval = INTERVAL_POSITION_UPDATE_FASTEST
+                interval = intervalInMillis
+                fastestInterval = DEFAULT_INTERVAL_POSITION_UPDATE_FASTEST_MILLIS
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                maxWaitTime = INTERVAL_POSITION_MAX_WAIT
+                maxWaitTime = DEFAULT_INTERVAL_POSITION_MAX_WAIT_MILLIS
             }
             fusedLocationProviderClient.requestLocationUpdates(
                 request,
@@ -130,7 +118,7 @@ class RecordingService : LifecycleService() {
                 }
                 ACTION_UPDATE_INTERVAL -> {
                     fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-                    updateLocationTracking()
+                    updateLocationTracking(it.getLongExtra(UPDATE_INTERVAL_IN_MILLIS, DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS))
                 }
                 else -> {}
             }
