@@ -22,5 +22,8 @@ object Constants {
     const val DEFAULT_LINE_WIDTH = "5.0"
 
     const val UPDATE_INTERVAL_IN_MILLIS = "UPDATE_INTERVAL_IN_MILLIS"
+    const val WALK_SPEED = 3.9F
+    const val DEFAULT_BEARING_TOLERANCE = 5F
+    const val DEFAULT_SPEED_TOLERANCE_M_S = 1F
 
 }

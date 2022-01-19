@@ -23,18 +23,23 @@ import com.sytrack.utils.Constants.ACTION_SHOW_RECORDING_FRAGMENT
 import com.sytrack.utils.Constants.ACTION_START_FOREGROUND_SERVICE
 import com.sytrack.utils.Constants.ACTION_STOP_FOREGROUND_SERVICE
 import com.sytrack.utils.Constants.ACTION_UPDATE_INTERVAL
+import com.sytrack.utils.Constants.DEFAULT_BEARING_TOLERANCE
 import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_MAX_WAIT_MILLIS
 import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS
 import com.sytrack.utils.Constants.DEFAULT_INTERVAL_POSITION_UPDATE_FASTEST_MILLIS
+import com.sytrack.utils.Constants.DEFAULT_SPEED_TOLERANCE_M_S
 import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_ID
 import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_NAME
 import com.sytrack.utils.Constants.NOTIFICATION_ID
 import com.sytrack.utils.Constants.UPDATE_INTERVAL_IN_MILLIS
+import com.sytrack.utils.Constants.WALK_SPEED
 import com.sytrack.utils.PermissionUtility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RecordingService : LifecycleService() {
+
+    var lastSavedPosition: Location? = null
 
     companion object {
         val isRecordingOn = MutableLiveData<Boolean>()
@@ -60,6 +65,16 @@ class RecordingService : LifecycleService() {
     private fun stopForegroundService() {
         isRecordingOn.postValue(false)
         stopForeground(true)
+    }
+
+    private fun replaceLastPointInRecordingTrack(recordPosition: RecordPosition) {
+        recordedPoints.value?.apply {
+            if (this.isNotEmpty())
+                removeLast()
+            add(recordPosition)
+
+            recordedPoints.postValue(this)
+        }
     }
 
     private fun addPointToRecordingTrack(recordPosition: RecordPosition) {
@@ -93,12 +108,46 @@ class RecordingService : LifecycleService() {
 
             locationResult.locations.let { locations ->
                 for (location in locations) {
-                    val position = location.toRecordPosition()
-                    sendPosition(position)
-                    if (isRecordingOn.value!!)
-                        addPointToRecordingTrack(position)
+
+                    if (isRecordingOn.value!!) {
+                        saveOrReplacePositionIfNeeded(location)
+                    }
+
+                    sendPosition(location.toRecordPosition())
+
                 }
             }
+        }
+    }
+
+    private fun saveOrReplacePositionIfNeeded(location: Location) {
+        val position = location.toRecordPosition()
+
+        if (lastSavedPosition != null) {
+            val twoLastPositionsDistance = lastSavedPosition!!.distanceTo(location)
+
+
+            //NOT TESTED
+            /*
+            if (location.hasSimilarBearingTo(lastSavedPosition!!)
+                && location.hasSimilarSpeedTo(lastSavedPosition!!)
+            )
+                return
+            */
+
+            if ((twoLastPositionsDistance < location.accuracy && location.speed < WALK_SPEED)) {
+                if (location.accuracy < lastSavedPosition!!.accuracy) {
+                    replaceLastPointInRecordingTrack(position)
+                }
+                return
+            }
+
+            addPointToRecordingTrack(position)
+            lastSavedPosition = location
+
+        } else {
+            lastSavedPosition = location
+            addPointToRecordingTrack(position)
         }
     }
 
@@ -192,4 +241,43 @@ class RecordingService : LifecycleService() {
             time = this.time,
             provider = this.provider
         )
+
+    private fun Location.hasSimilarBearingTo(location: Location): Boolean {
+
+        val DEGREE_TOLERACE_FIRST = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.bearingAccuracyDegrees
+        } else DEFAULT_BEARING_TOLERANCE
+
+        val DEGREE_TOLERACE_SECOND = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            location.bearingAccuracyDegrees
+        } else DEFAULT_BEARING_TOLERANCE
+
+        val startFirst = this.bearing - DEGREE_TOLERACE_FIRST
+        val endFirst = this.bearing + DEGREE_TOLERACE_FIRST
+
+        val startSecond = location.bearing - DEGREE_TOLERACE_SECOND
+        val endSecond = location.bearing + DEGREE_TOLERACE_SECOND
+
+        return endFirst > startSecond || endSecond > startFirst
+    }
+
+    private fun Location.hasSimilarSpeedTo(location: Location): Boolean {
+        val SPEED_TOLERACE_FIRST = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.speedAccuracyMetersPerSecond
+        } else DEFAULT_SPEED_TOLERANCE_M_S
+
+        val SPEED_TOLERACE_SECOND = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            location.speedAccuracyMetersPerSecond
+        } else DEFAULT_SPEED_TOLERANCE_M_S
+
+        val startFirst = this.speed - SPEED_TOLERACE_FIRST
+        val endFirst = this.speed + SPEED_TOLERACE_FIRST
+
+        val startSecond = location.speed - SPEED_TOLERACE_SECOND
+        val endSecond = location.speed + SPEED_TOLERACE_SECOND
+
+        return endFirst > startSecond || endSecond > startFirst
+    }
+
+
 }
