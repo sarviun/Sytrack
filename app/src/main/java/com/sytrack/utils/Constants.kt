@@ -25,5 +25,4 @@ object Constants {
     const val WALK_SPEED = 3.9F
     const val DEFAULT_BEARING_TOLERANCE = 5F
     const val DEFAULT_SPEED_TOLERANCE_M_S = 1F
-
 }
