@@ -30,11 +30,14 @@ import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_ID
 import com.sytrack.utils.Constants.NOTIFICATION_CHANNEL_NAME
 import com.sytrack.utils.Constants.NOTIFICATION_ID
 import com.sytrack.utils.Constants.UPDATE_INTERVAL_IN_MILLIS
+import com.sytrack.utils.Constants.WALK_SPEED
 import com.sytrack.utils.PermissionUtility
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RecordingService : LifecycleService() {
+
+    var lastSavedPosition: Location? = null
 
     companion object {
         val isRecordingOn = MutableLiveData<Boolean>()
@@ -60,6 +63,16 @@ class RecordingService : LifecycleService() {
     private fun stopForegroundService() {
         isRecordingOn.postValue(false)
         stopForeground(true)
+    }
+
+    private fun replaceLastPointInRecordingTrack(recordPosition: RecordPosition) {
+        recordedPoints.value?.apply {
+            if (this.isNotEmpty())
+                removeLast()
+            add(recordPosition)
+
+            recordedPoints.postValue(this)
+        }
     }
 
     private fun addPointToRecordingTrack(recordPosition: RecordPosition) {
@@ -93,12 +106,35 @@ class RecordingService : LifecycleService() {
 
             locationResult.locations.let { locations ->
                 for (location in locations) {
-                    val position = location.toRecordPosition()
-                    sendPosition(position)
-                    if (isRecordingOn.value!!)
-                        addPointToRecordingTrack(position)
+
+                    if (isRecordingOn.value!!) {
+                        saveOrReplacePositionIfNeeded(location)
+                    }
+
+                    sendPosition(location.toRecordPosition())
+
                 }
             }
+        }
+    }
+
+    private fun saveOrReplacePositionIfNeeded(location: Location) {
+        val position = location.toRecordPosition()
+
+        if (lastSavedPosition != null) {
+            val twoLastPositionsDistance = lastSavedPosition!!.distanceTo(location)
+            if (twoLastPositionsDistance < location.accuracy && location.speed < WALK_SPEED) {
+                if (location.accuracy < lastSavedPosition!!.accuracy)
+                    replaceLastPointInRecordingTrack(position)
+                else {
+                    // Position skipped
+                }
+            } else {
+                addPointToRecordingTrack(position)
+                lastSavedPosition = location
+            }
+        } else {
+            lastSavedPosition = location
         }
     }
 

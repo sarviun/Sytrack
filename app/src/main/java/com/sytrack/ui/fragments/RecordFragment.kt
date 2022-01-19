@@ -314,7 +314,11 @@ class RecordFragment : Fragment(R.layout.fragment_record) {
         })
 
         RecordingService.recordedPoints.observe(viewLifecycleOwner, {
+            //TODO: remove last marker from map
+            // if last point differs from the last point of incoming list
+
             points = it
+
             if (isCurrentPositionOn)
                 moveCameraToUser()
 
