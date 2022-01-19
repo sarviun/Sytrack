@@ -39,6 +39,7 @@ class RecordingService : LifecycleService() {
     companion object {
         val isRecordingOn = MutableLiveData<Boolean>()
         val recordedPoints = MutableLiveData<MutableList<RecordPosition>>()
+        val currentPosition = MutableLiveData<RecordPosition>()
     }
 
     private fun postInitialValues() {
@@ -61,19 +62,10 @@ class RecordingService : LifecycleService() {
         stopForeground(true)
     }
 
-    private fun addPointToRecordingTrack(location: Location?) {
-        location?.let {
-            val position = RecordPosition(
-                latitude = location.latitude,
-                longitude = location.longitude,
-                accuracy = location.accuracy,
-                time = location.time,
-                provider = location.provider
-            )
-            recordedPoints.value?.apply {
-                add(position)
-                recordedPoints.postValue(this)
-            }
+    private fun addPointToRecordingTrack(recordPosition: RecordPosition) {
+        recordedPoints.value?.apply {
+            add(recordPosition)
+            recordedPoints.postValue(this)
         }
     }
 
@@ -101,10 +93,17 @@ class RecordingService : LifecycleService() {
 
             locationResult.locations.let { locations ->
                 for (location in locations) {
-                    addPointToRecordingTrack(location)
+                    val position = location.toRecordPosition()
+                    sendPosition(position)
+                    if (isRecordingOn.value!!)
+                        addPointToRecordingTrack(position)
                 }
             }
         }
+    }
+
+    private fun sendPosition(recordPosition: RecordPosition) {
+        currentPosition.postValue(recordPosition)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -118,7 +117,12 @@ class RecordingService : LifecycleService() {
                 }
                 ACTION_UPDATE_INTERVAL -> {
                     fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-                    updateLocationTracking(it.getLongExtra(UPDATE_INTERVAL_IN_MILLIS, DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS))
+                    updateLocationTracking(
+                        it.getLongExtra(
+                            UPDATE_INTERVAL_IN_MILLIS,
+                            DEFAULT_INTERVAL_POSITION_UPDATE_MILLIS
+                        )
+                    )
                 }
                 else -> {}
             }
@@ -179,4 +183,13 @@ class RecordingService : LifecycleService() {
         )
         notificationManager.createNotificationChannel(channel)
     }
+
+    private fun Location.toRecordPosition() =
+        RecordPosition(
+            latitude = this.latitude,
+            longitude = this.longitude,
+            accuracy = this.accuracy,
+            time = this.time,
+            provider = this.provider
+        )
 }

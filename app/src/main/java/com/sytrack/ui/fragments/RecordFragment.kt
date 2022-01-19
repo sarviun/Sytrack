@@ -300,8 +300,8 @@ class RecordFragment : Fragment(R.layout.fragment_record) {
             showDirectionFAB(isRecording)
         })
 
-        RecordingService.recordedPoints.observe(viewLifecycleOwner, {
-            if (it.isEmpty())
+        RecordingService.currentPosition.observe(viewLifecycleOwner, {
+            if (it == null)
                 snackbar.show()
             else {
                 snackbar.dismiss()
@@ -309,13 +309,17 @@ class RecordFragment : Fragment(R.layout.fragment_record) {
                 binding.currentPositionFab.show()
             }
 
+            if (isCurrentPositionOn)
+                moveCameraToPosition(it)
+        })
+
+        RecordingService.recordedPoints.observe(viewLifecycleOwner, {
             points = it
             if (isCurrentPositionOn)
                 moveCameraToUser()
-            if (isRecording) {
-                addMarker()
-                addLine()
-            }
+
+            addMarker()
+            addLine()
         })
     }
 
